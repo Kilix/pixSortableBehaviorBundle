@@ -39,15 +39,12 @@ class PositionORMHandler extends PositionHandler
         if (array_key_exists(0, $result)) {
             return intval($result[0][1]);
         }
-
-
+        
         return 0;
     }
 
-
     public function reorderEntity($entity, $position, $last)
     {
-
         $qb = $this->em->createQueryBuilder('e')
             ->update($entity, 'e')
             ->set("e.{$this->getPositionFieldByEntity($entity)}", "e.{$this->getPositionFieldByEntity($entity)} + 1")
@@ -56,7 +53,6 @@ class PositionORMHandler extends PositionHandler
             ->setParameter('position', $position)
             ->setParameter('last', $last)
         ;
-
         return $qb
             ->getQuery()
             ->execute()

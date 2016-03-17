@@ -43,8 +43,7 @@ class SortableAdminController extends CRUDController
         $position = $positionService->getPosition($object, $position, $lastPosition);
 
         $setter = sprintf('set%s', ucfirst($positionService->getPositionFieldByEntity($entity)));
-        $currentPosition = $object->{sprintf('get%s', ucfirst($positionService->getPositionFieldByEntity($entity)))}();
-
+        
         $positionService->reorderEntity($entity,$position,$lastPosition);
 
         if (!method_exists($object, $setter)) {
