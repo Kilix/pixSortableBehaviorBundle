@@ -26,10 +26,7 @@ class SortableAdminController extends CRUDController
         $translator = $this->get('translator');
 
         if (!$this->admin->isGranted('EDIT')) {
-            $this->addFlash(
-                'sonata_flash_error',
-                $translator->trans('flash_error_no_rights_update_position')
-            );
+            $this->addFlash('sonata_flash_error', $translator->trans('flash_error_no_rights_update_position'));
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
@@ -46,6 +43,9 @@ class SortableAdminController extends CRUDController
         $position = $positionService->getPosition($object, $position, $lastPosition);
 
         $setter = sprintf('set%s', ucfirst($positionService->getPositionFieldByEntity($entity)));
+        $currentPosition = $object->{sprintf('get%s', ucfirst($positionService->getPositionFieldByEntity($entity)))}();
+
+        $positionService->reorderEntity($entity,$position,$lastPosition);
 
         if (!method_exists($object, $setter)) {
             throw new \LogicException(
@@ -67,15 +67,9 @@ class SortableAdminController extends CRUDController
             ));
         }
 
-        $this->addFlash(
-            'sonata_flash_success',
-            $translator->trans('flash_success_position_updated')
-        );
+        $this->addFlash('sonata_flash_success', $translator->trans('flash_success_position_updated'));
 
-        return new RedirectResponse($this->admin->generateUrl(
-            'list',
-            array('filter' => $this->admin->getFilterParameters())
-        ));
+        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
 
 }

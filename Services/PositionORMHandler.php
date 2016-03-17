@@ -28,6 +28,7 @@ class PositionORMHandler extends PositionHandler
 
     public function getLastPosition($entity)
     {
+
         $query = $this->em->createQuery(sprintf(
             'SELECT MAX(m.%s) FROM %s m',
             $positionFiles = $this->getPositionFieldByEntity($entity),
@@ -39,7 +40,27 @@ class PositionORMHandler extends PositionHandler
             return intval($result[0][1]);
         }
 
+
         return 0;
+    }
+
+
+    public function reorderEntity($entity, $position, $last)
+    {
+
+        $qb = $this->em->createQueryBuilder('e')
+            ->update($entity, 'e')
+            ->set("e.{$this->getPositionFieldByEntity($entity)}", "e.{$this->getPositionFieldByEntity($entity)} + 1")
+            ->where("e.{$this->getPositionFieldByEntity($entity)} >= :position")
+            ->andWhere("e.{$this->getPositionFieldByEntity($entity)} <= :last")
+            ->setParameter('position', $position)
+            ->setParameter('last', $last)
+        ;
+
+        return $qb
+            ->getQuery()
+            ->execute()
+        ;
     }
 
 

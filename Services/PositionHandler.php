@@ -31,6 +31,7 @@ abstract class PositionHandler
      */
     public function getPositionFieldByEntity($entity)
     {
+
         if (is_object($entity)) {
             $entity = \Doctrine\Common\Util\ClassUtils::getClass($entity);
         }
@@ -55,7 +56,7 @@ abstract class PositionHandler
 
         switch ($position) {
             case 'up' :
-                if ($object->{$getter}() > 0) {
+                if ($object->{$getter}() > 1) {
                     $newPosition = $object->{$getter}() - 1;
                 }
                 break;
@@ -67,8 +68,8 @@ abstract class PositionHandler
                 break;
 
             case 'top':
-                if ($object->{$getter}() > 0) {
-                    $newPosition = 0;
+                if ($object->{$getter}() > 1) {
+                    $newPosition = 1;
                 }
                 break;
 
