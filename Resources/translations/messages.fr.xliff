@@ -12,19 +12,19 @@
             </trans-unit>
             <trans-unit id="3">
                 <source>move_to_bottom</source>
-                <target>move_to_bottom</target>
+                <target>Déplacer en dernier</target>
             </trans-unit>
             <trans-unit id="4">
                 <source>move_down</source>
-                <target>move_down</target>
+                <target>Descendre</target>
             </trans-unit>
             <trans-unit id="5">
                 <source>move_up</source>
-                <target>move_up</target>
+                <target>Monter</target>
             </trans-unit>
             <trans-unit id="6">
                 <source>move_to_top</source>
-                <target>move_to_top</target>
+                <target>Déplacer en premier</target>
             </trans-unit>
             <trans-unit id="7">
                 <source>icon_move_to_bottom</source>
