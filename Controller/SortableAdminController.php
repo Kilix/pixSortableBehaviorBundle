@@ -33,6 +33,7 @@ class SortableAdminController extends CRUDController
 
         $object = $this->admin->getSubject();
 
+
         /** @var PositionHandler $positionService */
         $positionService = $this->get('pix_sortable_behavior.position');
 
@@ -43,8 +44,8 @@ class SortableAdminController extends CRUDController
         $position = $positionService->getPosition($object, $position, $lastPosition);
 
         $setter = sprintf('set%s', ucfirst($positionService->getPositionFieldByEntity($entity)));
-        
-        $positionService->reorderEntity($entity,$position,$lastPosition);
+
+        $positionService->moveToFirstPosition($object->getId(), $entity, $position);
 
         if (!method_exists($object, $setter)) {
             throw new \LogicException(
@@ -56,8 +57,8 @@ class SortableAdminController extends CRUDController
             );
         }
 
-        $object->{$setter}($position);
-        $this->admin->update($object);
+//        $object->{$setter}($position);
+//        $this->admin->update($object);
 
         if ($this->isXmlHttpRequest()) {
             return $this->renderJson(array(

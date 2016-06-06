@@ -43,20 +43,31 @@ class PositionORMHandler extends PositionHandler
         return 0;
     }
 
-    public function reorderEntity($entity, $position, $last)
+    public function moveToFirstPosition($idEntity, $entity, $position)
     {
         $qb = $this->em->createQueryBuilder('e')
-            ->update($entity, 'e')
-            ->set("e.{$this->getPositionFieldByEntity($entity)}", "e.{$this->getPositionFieldByEntity($entity)} + 1")
-            ->where("e.{$this->getPositionFieldByEntity($entity)} >= :position")
-            ->andWhere("e.{$this->getPositionFieldByEntity($entity)} <= :last")
-            ->setParameter('position', $position)
-            ->setParameter('last', $last)
+            ->select("e.id, e.{$this->getPositionFieldByEntity($entity)}")
+            ->from($entity, 'e')
+            ->where('e.id <> ' . $idEntity)
+            ->orderBy("e.{$this->getPositionFieldByEntity($entity)}")
         ;
-        return $qb
-            ->getQuery()
-            ->execute()
-        ;
+        $results = $qb->getQuery()->execute();
+
+        $cpt = 2;
+        foreach($results as $article) {
+            $sortedArticles[$article['id']] = $cpt;
+            $cpt++;
+        }
+        $sortedArticles[$idEntity] = $position;
+
+        foreach ($sortedArticles as $id=>$position) {
+            $qb = $this->em->createQueryBuilder('e')
+                ->update($entity, 'e')
+                ->set("e.{$this->getPositionFieldByEntity($entity)}", $position)
+                ->where('e.id = ' . $id)
+                ->getQuery()->execute()
+            ;
+        }
     }
 
 
