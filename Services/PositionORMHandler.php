@@ -48,17 +48,31 @@ class PositionORMHandler extends PositionHandler
         $qb = $this->em->createQueryBuilder('e')
             ->select("e.id, e.{$this->getPositionFieldByEntity($entity)}")
             ->from($entity, 'e')
-            ->where('e.id <> ' . $idEntity)
+            ->where('e.id <> :id_entite')
             ->orderBy("e.{$this->getPositionFieldByEntity($entity)}")
+            ->setParameter('id_entite', $idEntity)
         ;
         $results = $qb->getQuery()->execute();
 
-        $cpt = 2;
+        if($position < 1){
+            $position = 1;
+        }
+
+        $sortedArticles = [];
+        $sortedArticles[$idEntity] = $position;
+        $cpt = 1;
+
         foreach($results as $article) {
-            $sortedArticles[$article['id']] = $cpt;
+            if($cpt == $position) {
+                $sortedArticles[$article['id']] = $cpt+1;
+                $cpt++;
+            }
+            else{
+                $sortedArticles[$article['id']] = $cpt;
+            }
+
             $cpt++;
         }
-        $sortedArticles[$idEntity] = $position;
 
         foreach ($sortedArticles as $id=>$position) {
             $qb = $this->em->createQueryBuilder('e')
